@@ -3,6 +3,8 @@
 namespace Stefanius\WebChecker\Checker;
 
 use GuzzleHttp\Client;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UriInterface;
 use Stefanius\WebChecker\Checker\Traits\FormDataTrait;
 use Stefanius\WebChecker\Checker\Traits\MetaDataTrait;
 use Stefanius\WebChecker\Checker\Traits\MustContainHTagsTrait;
@@ -53,6 +55,8 @@ abstract class WebCheck
      * @var MetaDataHelper
      */
     protected $metaDataHelper;
+
+    protected $initialUri;
 
 
     /**
@@ -109,10 +113,37 @@ abstract class WebCheck
      */
     protected function makeRequest($method, $uri, $parameters = [], $cookies = [], $files = [])
     {
+        $this->initialUri = $uri;
+        $this->currentUri = $uri;
+
+        $onRedirect = function(
+            RequestInterface $request,
+            ResponseInterface $response,
+            UriInterface $uri
+        ) {
+            $this->createError('Redirecting! ' . $request->getUri() . ' to ' . $uri);
+            $this->createError('Updating currentUri to: ' . $uri);
+            $this->currentUri = sprintf('%s', $uri);
+        };
+
+        $options = [
+            'allow_redirects' => [
+                'max'             => 10,        // allow at most 10 redirects.
+                'strict'          => true,      // use "strict" RFC compliant redirects.
+                'referer'         => true,      // add a Referer header
+                'on_redirect'     => $onRedirect,
+                'track_redirects' => true
+            ]
+        ];
         $this->matcher = new PlainTextMatcher($this);
         $this->client = new Client();
 
-        $this->response = $this->client->request($method, $uri);
+
+        $this->request = $this->client->get($uri, $options);
+
+        $this->response = $this->request;
+
+        //var_dump($this->response->getHeaderLine('X-Guzzle-Redirect-History'));
 
         $this->body = $this->response->getBody()->getContents();
 
@@ -121,14 +152,8 @@ abstract class WebCheck
         $this->crawler->addContent($this->body);
         $this->metaDataHelper = new MetaDataHelper($this->crawler);
 
-        //$this->request = $this->client->getRequest();
-
-        //$this->response = $this->client->getResponse();
-
         return $this;
     }
-
-
 
     /**
      * Extract the parameters from the given form.
@@ -151,7 +176,23 @@ abstract class WebCheck
      */
     protected function seePageIs($uri)
     {
-        echo "seePageIs is not implemented.";
+        if ($this->currentUri !== $uri) {
+            $this->createError($this->currentUri . ' is not the same as the expected uri: ' . $uri);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Assert that the current page matches a given URI.
+     *
+     * @return $this
+     */
+    protected function seePageIsRedirected()
+    {
+        if ($this->currentUri === $this->initialUri) {
+            $this->createError('The page seems not to be redirected.');
+        }
 
         return $this;
     }
@@ -466,6 +507,6 @@ abstract class WebCheck
 
     protected function createError($msg)
     {
-        echo $msg;
+        echo $msg . "\n";
     }
 }

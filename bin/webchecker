@@ -2,7 +2,7 @@
 
 <?php
 
-require_once(dirname(__FILE__) . '/../vendor/autoload.php');
+require_once(getcwd() . '/vendor/autoload.php');
 #require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/Checker/WebCheck.php');
 #require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/Matchers/PlainTextMatcher.php');
 #require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/PageHelpers/MetaDataHelper.php');
