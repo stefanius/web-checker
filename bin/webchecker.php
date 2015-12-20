@@ -1,8 +1,9 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../vendor/autoload.php');
-require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/Checker/WebCheck.php');
-require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/Matchers/PlainTextMatcher.php');
+#require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/Checker/WebCheck.php');
+#require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/Matchers/PlainTextMatcher.php');
+#require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/PageHelpers/MetaDataHelper.php');
 
 $files = [];
 $dir = new DirectoryIterator(dirname(__FILE__) . '/../checks');
@@ -38,7 +39,7 @@ function info($dir) {
     global $files;
 
     foreach ($dir as $fileinfo) {
-        if (!$fileinfo->isDot() && !$fileinfo->isDir()) {
+        if (!$fileinfo->isDot() && !$fileinfo->isDir() && strpos($fileinfo->getRealPath(), 'Checker') !== false) {
             $files[] = $fileinfo->getRealPath();
         } else if (!$fileinfo->isDot() && $fileinfo->isDir()) {
             $dir2 = new DirectoryIterator($fileinfo->getRealPath());
