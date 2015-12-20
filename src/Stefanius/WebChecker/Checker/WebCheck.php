@@ -239,7 +239,9 @@ abstract class WebCheck
             $message .= " and URL [{$url}]";
         }
 
-        $this->assertTrue($this->hasLink($text, $url), "{$message}.");
+        if (!$this->hasLink($text, $url)) {
+            $this->createError($message);
+        }
 
         return $this;
     }
