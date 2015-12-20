@@ -9,5 +9,8 @@
     },
     "autoload": {
         "psr-4": { "": "src/" }
-    }
+    },
+    "bin": [
+        "bin/webchecker"
+    ]
 }
