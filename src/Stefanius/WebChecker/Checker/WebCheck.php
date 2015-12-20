@@ -121,8 +121,8 @@ abstract class WebCheck
             ResponseInterface $response,
             UriInterface $uri
         ) {
-            $this->createError('Redirecting! ' . $request->getUri() . ' to ' . $uri);
-            $this->createError('Updating currentUri to: ' . $uri);
+            //$this->createError('Redirecting! ' . $request->getUri() . ' to ' . $uri);
+           // $this->createError('Updating currentUri to: ' . $uri);
             $this->currentUri = sprintf('%s', $uri);
         };
 
@@ -374,8 +374,6 @@ abstract class WebCheck
 
         return $this;
     }
-
-
 
     /**
      * Assert that the expected value is selected.
