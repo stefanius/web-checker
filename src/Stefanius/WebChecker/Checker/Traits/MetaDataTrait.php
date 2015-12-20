@@ -12,7 +12,10 @@ trait MetaDataTrait
     protected function pageTitleIs($title)
     {
         if ($this->metaDataHelper->getPageTitle() !== $title) {
-            $this->createError('henk');
+            $this->createError(sprintf("The pagetitle '%s' does not match the expected pagetitle '%s'",
+                $this->metaDataHelper->getPageTitle(),
+                $title
+            ));
         }
 
         return $this;
