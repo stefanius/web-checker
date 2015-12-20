@@ -8,7 +8,13 @@ require_once(dirname(__FILE__) . '/../vendor/autoload.php');
 #require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/PageHelpers/MetaDataHelper.php');
 
 $files = [];
-$dir = new DirectoryIterator(dirname(__FILE__) . '/../checks');
+if (!is_dir(getcwd() . '/checks')) {
+    throw new Exception(sprintf(
+        'The directory "%s" has to exists and must contain the checker-scripts.',
+        getcwd() . '/checks'
+    ));
+}
+$dir = new DirectoryIterator(getcwd() . '/checks');
 info($dir);
 
 foreach ($files as $filename) {
