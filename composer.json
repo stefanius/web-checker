@@ -1,4 +1,8 @@
 {
+    "name": "stefanius/web-checker",
+    "license": "N/A",
+    "type": "project",
+    "description": "This is just a prototype. This will be filled in later.",
     "require": {
         "symfony/framework-bundle": "^3.0",
         "symfony/dom-crawler": "^3.0",
