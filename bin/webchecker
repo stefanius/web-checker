@@ -3,9 +3,7 @@
 <?php
 
 require_once(getcwd() . '/vendor/autoload.php');
-#require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/Checker/WebCheck.php');
-#require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/Matchers/PlainTextMatcher.php');
-#require_once(dirname(__FILE__) . '/../src/Stefanius/WebChecker/PageHelpers/MetaDataHelper.php');
+
 
 $files = [];
 if (!is_dir(getcwd() . '/checks')) {
@@ -22,7 +20,10 @@ foreach ($files as $filename) {
 }
 
 function runChecks($filename) {
+    global $reader;
+
     require_once($filename);
+
     $className = getClassName($filename);
     $class = new $className();
 
@@ -30,8 +31,21 @@ function runChecks($filename) {
 
     foreach ($methods as $method) {
         if (strpos($method, 'check') !== false) {
-            echo "Running: $className::$method\n";
-            call_user_func( array($class,$method));
+
+            $reader = new \DocBlockReader\Reader($class, $method);
+            $dataProvider = $reader->getParameter('dataProvider');
+
+            if (!is_null($dataProvider)) {
+                $items = call_user_func(array($class,$dataProvider));
+
+                foreach ($items as $item) {
+                    echo 'Running: ' . $className . '::' . $method . '[' . implode(';', $item). ']' . "\n";
+                    call_user_func_array(array($class,$method), $item);
+                }
+            } else {
+                echo "Running: $className::$method\n";
+                call_user_func(array($class,$method));
+            }
         }
     }
 }
