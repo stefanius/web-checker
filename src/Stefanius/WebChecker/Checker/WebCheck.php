@@ -58,48 +58,6 @@ abstract class WebCheck
 
     protected $initialUri;
 
-
-    /**
-     * Assert that the client response has an OK status code.
-     *
-     * @return $this
-     */
-    public function assertResponseOk()
-    {
-        if (!($this->response->getStatusCode() === 200)) {
-            $this->createError("Expected status code 200, got {$this->response->getStatusCode()}.");
-        }
-
-        return $this;
-    }
-
-    /**
-     * Assert that the client response has a given code.
-     *
-     * @param  int  $code
-     * @return $this
-     */
-    public function assertResponseStatus($code)
-    {
-        if (!($this->response->getStatusCode() === $code)) {
-            $this->createError("Expected status code $code, got {$this->response->getStatusCode()}.");
-        }
-
-        return $this;
-    }
-
-    /**
-     * Visit the given URI with a GET request.
-     *
-     * @param  string  $uri
-     *
-     * @return $this
-     */
-    public function visit($uri)
-    {
-        return $this->makeRequest('GET', $uri);
-    }
-
     /**
      * Make a request to the application and create a Crawler instance.
      *
@@ -111,7 +69,7 @@ abstract class WebCheck
      *
      * @return $this
      */
-    protected function makeRequest($method, $uri, $parameters = [], $cookies = [], $files = [])
+    private function makeRequest($method, $uri, $parameters = [], $cookies = [], $files = [])
     {
         $this->initialUri = $uri;
         $this->currentUri = $uri;
@@ -121,8 +79,6 @@ abstract class WebCheck
             ResponseInterface $response,
             UriInterface $uri
         ) {
-            //$this->createError('Redirecting! ' . $request->getUri() . ' to ' . $uri);
-           // $this->createError('Updating currentUri to: ' . $uri);
             $this->currentUri = sprintf('%s', $uri);
         };
 
@@ -143,8 +99,6 @@ abstract class WebCheck
 
         $this->response = $this->request;
 
-        //var_dump($this->response->getHeaderLine('X-Guzzle-Redirect-History'));
-
         $this->body = $this->response->getBody()->getContents();
 
         $this->crawler = new Crawler();
@@ -156,16 +110,45 @@ abstract class WebCheck
     }
 
     /**
-     * Extract the parameters from the given form.
+     * Assert that the client response has an OK status code.
      *
-     * @param  \Symfony\Component\DomCrawler\Form  $form
-     * @return array
+     * @return $this
      */
-    protected function extractParametersFromForm(Form $form)
+    public function isResponseOk()
     {
-        parse_str(http_build_query($form->getValues()), $parameters);
+        if (!($this->response->getStatusCode() === 200)) {
+            $this->createError("Expected status code 200, got {$this->response->getStatusCode()}.");
+        }
 
-        return $parameters;
+        return $this;
+    }
+
+    /**
+     * Assert that the client response has a given code.
+     *
+     * @param  int  $code
+     *
+     * @return $this
+     */
+    public function isResponseStatus($code)
+    {
+        if (!($this->response->getStatusCode() === $code)) {
+            $this->createError("Expected status code $code, got {$this->response->getStatusCode()}.");
+        }
+
+        return $this;
+    }
+
+    /**
+     * Visit the given URI with a GET request.
+     *
+     * @param  string  $uri
+     *
+     * @return $this
+     */
+    public function visit($uri)
+    {
+        return $this->makeRequest('GET', $uri);
     }
 
     /**
