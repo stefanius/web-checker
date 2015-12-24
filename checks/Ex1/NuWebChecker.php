@@ -1,7 +1,5 @@
 <?php
 
-use Stefanius\WebChecker\Annotations\DataProvider;
-
 class NuWebChecker extends Stefanius\WebChecker\Checker\WebCheck
 {
     public function checkDvdw()
@@ -15,7 +13,6 @@ class NuWebChecker extends Stefanius\WebChecker\Checker\WebCheck
 
     public function checkNu()
     {
-        return;
         $this->visit('http://www.nu.nl')
             ->assertResponseOk()
             ->assertResponseStatus(200)
