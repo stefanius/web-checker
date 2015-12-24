@@ -16,13 +16,14 @@ class MetaDataHelper
      *
      * @param string|Crawler $data
      *
-     * @throw \Exception
+     * @throws \Exception
      */
     public function __construct($data)
     {
         if (!($data instanceof Crawler) && !(is_string($data))) {
             throw new \Exception('Parameter must be either a string or an instance of \Symfony\Component\DomCrawler\Crawler\'.');
         }
+
         if ($data instanceof Crawler) {
             $this->crawler = $data;
         }
