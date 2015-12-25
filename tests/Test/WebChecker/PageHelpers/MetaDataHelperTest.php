@@ -70,6 +70,15 @@ class MetaDataHelperTest extends \PHPUnit_Framework_TestCase
                 true,
                 true
             ],
+            [
+                'gm_1.html',
+                'Gastouder Marjolein Dordrecht',
+                'Gastouder Marjolein heeft een ruime ervaring met oppassen in Dodrecht. Als u een goede gastouder in Dordrecht zoekt, stop met zoeken!',
+                true,
+                true,
+                true,
+                true
+            ],
         ];
     }
 }
