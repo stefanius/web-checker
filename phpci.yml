@@ -3,6 +3,8 @@ build_settings:
   ignore:
     - "tests"
     - "bin"
+    - "vendor"
+    - "checks"
 
 setup:
   composer:
