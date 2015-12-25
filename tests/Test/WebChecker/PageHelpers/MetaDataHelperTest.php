@@ -4,8 +4,9 @@ namespace Test\WebChecker\PageHelpers;
 
 use Stefanius\WebChecker\PageHelpers\MetaDataHelper;
 use Symfony\Component\DomCrawler\Crawler;
+use Test\WebChecker\AbstractTestCase;
 
-class MetaDataHelperTest extends \PHPUnit_Framework_TestCase
+class MetaDataHelperTest extends AbstractTestCase
 {
     /**
      * @param $filename
@@ -20,7 +21,7 @@ class MetaDataHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testMetaDateHelperStringInput($filename, $pageTitle, $description, $hasRobotsFollow, $robotsIsFollow, $hasRobotsIndex, $robotsIsIndex)
     {
-        $content = file_get_contents('/Users/sgrootveld/PhpstormProjects/web-checker/tests/testdata/' . $filename);
+        $content = $this->loadTestData($filename);
 
         $helper = new MetaDataHelper($content);
 
@@ -45,7 +46,7 @@ class MetaDataHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testMetaDateHelperCrawlerInput($filename, $pageTitle, $description, $hasRobotsFollow, $robotsIsFollow, $hasRobotsIndex, $robotsIsIndex)
     {
-        $content = file_get_contents('/Users/sgrootveld/PhpstormProjects/web-checker/tests/testdata/' . $filename);
+        $content = $this->loadTestData($filename);
         $crawler = new Crawler($content);
 
         $helper = new MetaDataHelper($crawler);
