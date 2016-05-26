@@ -3,8 +3,10 @@
 namespace Stefanius\WebChecker\Checker;
 
 use GuzzleHttp\Client;
+use Monolog\Logger;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
+use Psr\Log\LoggerInterface;
 use Stefanius\WebChecker\Checker\Traits\FormDataTrait;
 use Stefanius\WebChecker\Checker\Traits\MetaDataTrait;
 use Stefanius\WebChecker\Checker\Traits\MustContainHTagsTrait;
@@ -59,6 +61,11 @@ abstract class WebCheck
     protected $initialUri;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * Make a request to the application and create a Crawler instance.
      *
      * @param  string  $method
@@ -107,6 +114,11 @@ abstract class WebCheck
         $this->metaDataHelper = new MetaDataHelper($this->crawler);
 
         return $this;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -190,7 +202,7 @@ abstract class WebCheck
     protected function see($text)
     {
         if(!$this->matcher->shouldContain($this->body, $text)) {
-            $this->createError('SEE: Whoopsie doopsie');
+            $this->createError('hhjhjh');
         }
 
         return $this;
@@ -488,6 +500,6 @@ abstract class WebCheck
 
     protected function createError($msg)
     {
-        echo $msg . "\n";
+        $this->logger->info($msg);
     }
 }

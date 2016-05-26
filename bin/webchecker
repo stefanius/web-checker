@@ -4,14 +4,21 @@
 
 require_once(getcwd() . '/vendor/autoload.php');
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+$log = new Logger('name');
+$log->pushHandler(new StreamHandler('your.log', Logger::INFO));
 
 $files = [];
+
 if (!is_dir(getcwd() . '/checks')) {
     throw new Exception(sprintf(
         'The directory "%s" has to exists and must contain the checker-scripts.',
         getcwd() . '/checks'
     ));
 }
+
 $dir = new DirectoryIterator(getcwd() . '/checks');
 info($dir);
 
@@ -22,10 +29,13 @@ foreach ($files as $filename) {
 function runChecks($filename) {
     global $reader;
 
+    global $log;
+
     require_once($filename);
 
     $className = getClassName($filename);
     $class = new $className();
+    $class->setLogger($log);
 
     $methods = get_class_methods($class);
 
@@ -36,7 +46,7 @@ function runChecks($filename) {
             $dataProvider = $reader->getParameter('dataProvider');
 
             if (!is_null($dataProvider)) {
-                $items = call_user_func(array($class,$dataProvider));
+                $items = call_user_func(array($class, $dataProvider));
 
                 foreach ($items as $item) {
                     echo 'Running: ' . $className . '::' . $method . '[' . implode(';', $item). ']' . "\n";
