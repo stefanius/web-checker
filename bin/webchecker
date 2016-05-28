@@ -3,12 +3,10 @@
 <?php
 
 require_once(getcwd() . '/vendor/autoload.php');
+require_once(getcwd() . '/checks/DagVanDeWeek/DagVanDeWeekBase.php');
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-
-$log = new Logger('name');
-$log->pushHandler(new StreamHandler('your.log', Logger::INFO));
 
 $files = [];
 
@@ -29,12 +27,15 @@ foreach ($files as $filename) {
 function runChecks($filename) {
     global $reader;
 
-    global $log;
-
     require_once($filename);
 
     $className = getClassName($filename);
+
     $class = new $className();
+
+    $log = new Logger('name');
+    $log->pushHandler(new StreamHandler($class->logfile . '.log', Logger::INFO));
+
     $class->setLogger($log);
 
     $methods = get_class_methods($class);
@@ -63,8 +64,23 @@ function runChecks($filename) {
 function getClassName($filename) {
     $filename = rtrim($filename, '.php');
     $elements = explode('/', $filename);
+    
+    $block = [
+        'Users',
+        'sgrootveld',
+        'PhpstormProjects',
+        'web-checker'
+    ];
 
-    return end($elements);
+    $new = [];
+    
+    foreach ($elements as $element) {
+        if (!in_array($element, $block)) {
+            $new[] = ucfirst($element);
+        }
+    }
+
+    return trim(implode('\\', $new), '\\');
 }
 
 function info($dir) {

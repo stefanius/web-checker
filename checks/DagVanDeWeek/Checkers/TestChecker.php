@@ -1,11 +1,11 @@
 <?php
 
-namespace Checks\Ex1;
+namespace Checks\DagVanDeWeek\Checkers;
 
-class NuWebChecker extends \Stefanius\WebChecker\Checker\WebCheck
+use Checks\DagVanDeWeek\DagVanDeWeekBase;
+
+class TestChecker extends DagVanDeWeekBase
 {
-    public $logfile = 'Example';
-
     public function checkDvdw()
     {
         $this->visit('dagvandeweek.nl')
