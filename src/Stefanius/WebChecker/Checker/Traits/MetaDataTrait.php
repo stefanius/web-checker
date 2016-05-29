@@ -43,7 +43,7 @@ trait MetaDataTrait
     protected function hasRobotsIndex()
     {
         if (!$this->metaDataHelper->hasRobotsIndex()) {
-            $this->createError("blah");
+            $this->createError("Page fails on 'hasRobotsIndex'");
         }
 
         return $this;
@@ -55,7 +55,7 @@ trait MetaDataTrait
     protected function hasRobotsNoIndex()
     {
         if (!$this->metaDataHelper->hasRobotsNoIndex()) {
-            $this->createError("blah");
+            $this->createError("Page fails on 'hasRobotsNoIndex'");
         }
 
         return $this;
@@ -67,7 +67,7 @@ trait MetaDataTrait
     protected function hasRobotsNoFollow()
     {
         if (!$this->metaDataHelper->hasRobotsNoFollow()) {
-            $this->createError("blah");
+            $this->createError("Page fails on 'hasRobotsNoFollow'");
         }
 
         return $this;
@@ -79,7 +79,7 @@ trait MetaDataTrait
     protected function hasRobotsFollow()
     {
         if (!$this->metaDataHelper->hasRobotsFollow()) {
-            $this->createError("blah");
+            $this->createError("Page fails on 'hasRobotsFollow'");
         }
 
         return $this;
