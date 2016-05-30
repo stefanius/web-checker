@@ -2,8 +2,15 @@
 
 namespace Stefanius\WebChecker\Checker\Traits;
 
+use Stefanius\WebChecker\PageHelpers\MetaDataHelper;
+
 trait MetaDataTrait
 {
+    /**
+     * @var MetaDataHelper
+     */
+    protected $metaDataHelper;
+
     /**
      * @param $title
      *
@@ -80,6 +87,47 @@ trait MetaDataTrait
     {
         if (!$this->metaDataHelper->hasRobotsFollow()) {
             $this->createError("Page fails on 'hasRobotsFollow'");
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $min
+     * @param $max
+     *
+     * @return $this
+     */
+    protected function metaDescriptionBetween($min, $max)
+    {
+        $description = $this->metaDataHelper->getDescription();
+
+        if ((strlen($description) >= $min) && (strlen($description) <= $max)) {
+            $this->createError("Page description is not between $min and $max characters.");
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function hasGoodMetaDescription()
+    {
+        return $this->metaDescriptionBetween(140, 160);
+    }
+
+    /**
+     * @param $needle
+     * 
+     * @return $this
+     */
+    protected function metaDescriptionContains($needle)
+    {
+        $description = $this->metaDataHelper->getDescription();
+
+        if (strpos(strtolower($description), strtolower($needle)) === false) {
+            $this->createError("Page metadescription does not contain '$needle'");
         }
 
         return $this;

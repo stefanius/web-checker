@@ -3,38 +3,15 @@
 namespace Checks\DagVanDeWeek\Checkers;
 
 use Checks\DagVanDeWeek\DagVanDeWeekBase;
+use Stefanius\WebChecker\Checker\Traits\SitemapsTrait;
 
 class TestChecker extends DagVanDeWeekBase
 {
+    use SitemapsTrait;
+
     /**
-     * @dataProvider sitemaps
-     *
-     * @param $sitemap
+     * @return array
      */
-    public function checkSitemapsReacheble($sitemap)
-    {
-        $this->visit($sitemap)
-            ->isResponseOk();
-    }
-    
-    /**
-     * @dataProvider sitemaps
-     *
-     * @param $sitemap
-     */
-    public function checkSitemapTest($sitemap)
-    {
-        $sitemap = simplexml_load_file($sitemap);
-
-        foreach ($sitemap as $item) {
-            $url = (string)trim($item->loc);
-
-            $this->visit($url)
-                ->hasRobotsFollow()
-                ->hasRobotsIndex();
-        }
-    }
-
     public function sitemaps()
     {
         return [
