@@ -39,11 +39,19 @@ class MetaDataHelper
      */
     public function getDescription()
     {
-        if ($this->crawler->filterXPath("//meta[@name='description']")->count()) {
+        if ($this->crawler->filterXPath("//meta[@name='description']")->count() > 0) {
             return $this->crawler->filterXPath("//meta[@name='description']")->attr('content');
         }
 
         return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function hasDescription()
+    {
+        return $this->crawler->filterXPath("//meta[@name='description']")->count() > 0;
     }
 
     /**

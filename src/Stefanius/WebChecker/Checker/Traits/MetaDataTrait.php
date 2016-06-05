@@ -102,8 +102,8 @@ trait MetaDataTrait
     {
         $description = $this->metaDataHelper->getDescription();
 
-        if ((strlen($description) >= $min) && (strlen($description) <= $max)) {
-            $this->createError("Page description is not between $min and $max characters.");
+        if (!((strlen($description) >= $min) && (strlen($description) <= $max))) {
+            $this->createError("Page description is not between $min and $max characters. Current length is: '" . strlen($description) . "'");
         }
 
         return $this;
@@ -115,6 +115,18 @@ trait MetaDataTrait
     protected function hasGoodMetaDescription()
     {
         return $this->metaDescriptionBetween(140, 160);
+    }
+
+    /**
+     * @return $this
+     */
+    protected function hasMetaDescription()
+    {
+        if (!$this->metaDataHelper->hasDescription()) {
+            $this->createError("Page description does not contain a metadescription.");
+        }
+
+        return $this;
     }
 
     /**

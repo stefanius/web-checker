@@ -500,6 +500,6 @@ abstract class WebCheck
 
     protected function createError($msg)
     {
-        $this->logger->info($msg);
+        $this->logger->info($msg, [$this->initialUri, $this->currentUri]);
     }
 }

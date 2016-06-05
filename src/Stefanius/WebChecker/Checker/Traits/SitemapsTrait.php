@@ -30,6 +30,7 @@ trait SitemapsTrait
             $this->visit($url)
                 ->hasRobotsFollow()
                 ->hasRobotsIndex()
+                ->hasMetaDescription()
                 ->hasGoodMetaDescription();
         }
     }
